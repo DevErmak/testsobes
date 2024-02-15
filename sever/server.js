@@ -12,6 +12,7 @@ app.post("/api/getToken", async (req, res) => {
   const { data } = await axios.post(
     "https://okhasanovdev.amocrm.ru/oauth2/access_token",
     {
+      // body
       client_id: "26fe2bf5-6a9f-4807-b226-66b03f5dad97",
       client_secret:
         "Xt5FETKcgktn4vHgZK8DuSsTefk8Q5l5SnaM3t3AjQ7y2uFSbCZy6Jl254PU8jTz",
