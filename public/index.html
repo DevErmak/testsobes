@@ -11,11 +11,46 @@
       rel="stylesheet"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+    <link rel="stylesheet" href="./style.css" />
     <title>testAmoCRM</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root">
+      <main>
+        <section class="header">
+          <div class="items-controller">
+            <span>Количество записей</span>
+            <select name="" id="itemperpage">
+              <option value="2" selected>02</option>
+              <option value="5">05</option>
+              <option value="10">10</option>
+              <option value="all">all</option>
+            </select>
+          </div>
+        </section>
+        <section class="field">
+          <table>
+            <thead>
+              <tr>
+                <th>Имя сделки</th>
+                <th>Бюджет</th>
+                <th>Дата создания</th>
+                <th>Дата изменения</th>
+                <th>Ответственный</th>
+              </tr>
+            </thead>
+            <tbody id="tableDataDeal"></tbody>
+          </table>
+          <div class="bottom-field">
+            <ul class="pagination">
+              <li class="prev"><a href="#" id="prev">&#139;</a></li>
+              <li class="next"><a href="#" id="next">&#155;</a></li>
+            </ul>
+          </div>
+        </section>
+      </main>
+    </div>
     <script src="../src/index.js"></script>
   </body>
 </html>
