@@ -32,3 +32,10 @@ const getToken = async () => {
   console.log("---------------->data", data);
 };
 getToken();
+
+const root = document.getElementById("root");
+
+const renderComponent = () => {
+  root.innerHTML = "afa";
+};
+renderComponent();
