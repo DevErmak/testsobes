@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -21,11 +21,19 @@
         <section class="header">
           <div class="items-controller">
             <span>Количество записей</span>
-            <select name="" id="itemperpage">
-              <option value="2" selected>02</option>
+            <select id="itemperpage">
+              <option value="2">02</option>
               <option value="5">05</option>
-              <option value="10">10</option>
+              <option value="10" selected>10</option>
               <option value="all">all</option>
+            </select>
+          </div>
+          <div class="items-controller">
+            <span>сортировать</span>
+            <select id="select-sort">
+              <option value="none" selected>Не сортировать</option>
+              <option value="name">Название сделки</option>
+              <option value="price">Бюджет</option>
             </select>
           </div>
         </section>

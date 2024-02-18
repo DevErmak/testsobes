@@ -15,6 +15,7 @@ app.use((req, res, next) => {
 
 app.post("/api/getToken", async (req, res) => {
   const body = req.body;
+  console.log("getToken");
   try {
     const { data } = await axios.post(
       "https://okhasanovdev.amocrm.ru/oauth2/access_token",
