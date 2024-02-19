@@ -103,3 +103,7 @@ i.fa-edit {
 i.fa-trash {
   color: red;
 }
+
+.name-header {
+  cursor: pointer;
+}

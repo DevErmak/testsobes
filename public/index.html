@@ -28,21 +28,13 @@
               <option value="all">all</option>
             </select>
           </div>
-          <div class="items-controller">
-            <span>сортировать</span>
-            <select id="select-sort">
-              <option value="none" selected>Не сортировать</option>
-              <option value="name">Название сделки</option>
-              <option value="price">Бюджет</option>
-            </select>
-          </div>
         </section>
         <section class="field">
           <table>
             <thead>
               <tr>
-                <th>Имя сделки</th>
-                <th>Бюджет</th>
+                <th id="name" class="name-header">Имя сделки</th>
+                <th id="price" class="name-header">Бюджет</th>
                 <th>Дата создания</th>
                 <th>Дата изменения</th>
                 <th>Ответственный</th>
@@ -50,6 +42,7 @@
             </thead>
             <tbody id="tableDataDeal"></tbody>
           </table>
+          <div id="loader"></div>
           <div class="bottom-field">
             <ul class="pagination">
               <li class="prev"><a href="#" id="prev">&#139;</a></li>

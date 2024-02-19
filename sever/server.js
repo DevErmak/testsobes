@@ -15,7 +15,6 @@ app.use((req, res, next) => {
 
 app.post("/api/getToken", async (req, res) => {
   const body = req.body;
-  console.log("getToken");
   try {
     const { data } = await axios.post(
       "https://okhasanovdev.amocrm.ru/oauth2/access_token",
@@ -25,7 +24,6 @@ app.post("/api/getToken", async (req, res) => {
         redirect_uri: "http://localhost:3000/server.js",
       }
     );
-    console.log("---------------->data", data);
     res.json(data);
   } catch (err) {
     console.log("---------------->error", err);
@@ -44,7 +42,6 @@ app.post("/api/refreshToken", async (req, res) => {
         redirect_uri: "http://localhost:3000/server.js",
       }
     );
-    console.log("---------------->data", data);
     res.json(data);
   } catch (err) {
     console.log("---------------->error", err);
@@ -63,7 +60,6 @@ app.post("/api/getDeal", async (req, res) => {
         headers: { Authorization: `Bearer ${req.body.token}` },
       }
     );
-    console.log("---------------->data", data);
     res.json(data);
   } catch (err) {
     console.log("---------------->error", err);
@@ -82,7 +78,6 @@ app.post("/api/getNameUser", async (req, res) => {
         headers: { Authorization: `Bearer ${req.body.token}` },
       }
     );
-    console.log("---------------->dataName", data);
     res.json(data);
   } catch (err) {
     console.log("---------------->error", err);

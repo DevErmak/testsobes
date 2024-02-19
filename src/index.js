@@ -1,16 +1,27 @@
+const instance = axios.create({
+  baseURL: "http://localhost:3000/",
+  headers: {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
+    "Access-Control-Allow-Headers":
+      "Accept, X-Requested-With, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization",
+  },
+});
+const CODE_AUTH =
+  "def502002252f4710ca2e4db4e1939ab3c23ac3bc1dc95746669e82393d66b23549ed1f6ec347a9c5898b863ffabb6b39929e3e3895ab49abbb3d94ca87cbcbda9bc7a3b64171f0d77faa034858c7387ee1b57850c74d3c38bcaebc0a86dde8027df1d36b41d34ed068b40d04618e8126a231365ab48a0292971092be68d613a470e041d6fbe8d349e16768b70236e866c421f3f44f4a0937ffd6f0ffd2c32d2e1536f298d06e7eb4a45a421470ad3f10536556549f527cf840c63ed47c4c1b6e9f91a77bf1c4cab8226f2cc218b79c70b744d2611296994eac77685f6191404d50a4408f81007cef9690d273ae36fbe67637e6dd2d7b03b4737bfd6096588fbe65b01e6fb04c186463fb3e4b5512c0e7550dcfb2ebad34e7f211e282003cb724df58b9c5b576c731c7969bf68c0798ae45f0e134029514918f51d0dfb43e967970add2825d02995cb5371dd792e8f29dc3afca8d0eb1240e88558690bb3f0e67c69c9238e7a19c78045952da81da1677d97132f55c7f4ff88a183936e6ebc8f55355021f5bd0a903306751f9cf3a46d95c112d562e2a6ef9ec5dc492c5f4b1c43b0a4f64e58d274369b84db5191cc91d2b78b742783b17021cac3aaf03035bc3dd1323957385dd7fe4d733584eae1ffbb2227240ea66d801c6a1acecbe7f0ac6f378f5a8baa81d310c9c3b7ce4eb893dd";
+
 let pageNumber = 1;
 let stateDataDeal = [];
 let isDataLoading = false;
 let isZeroDealsLeft = false;
+let stateSort = { name: "", order: "desc" };
 
 let userData = {
   client_id: "756a610b-eb07-4014-8f1d-634f54d38af7",
   client_secret:
     "iQq3kmWaZWQDSyWvf3ByMiAT2BTXTV8EYgP0Zen7mP7VVWjNvHZWgVLFWI0CrJy6",
 };
-
-const CODE_AUTH =
-  "def50200de2f7e247fd63b8d87eb4223249ed118f6a71c4ced2529b9a02aef46c3923e267fa67118507d07f8185854c876204317c5d6da7b65f69624ac9db63586ff80423073d8646ea4cdd2ac64b3a4c11ba947b6d775a05e3e0c40fb7f3725b78b77f6839c879f1d4d9ca74f47e6d5b692c9c743a0904b9cbb0970d30a1277753e0a9cb05859e337a02c137cd774cef408a23495f68b6e8221a495cded114cde5c7650fb2f2e3bceef90a5b1f275e8aa19513767e319d576d6b4f8ae7ff7b69387b70a626c4ae1e4190f68ce1f5dcf7e7c6145008a8b8913afa0913a13cc644168535a54999b6c25cd9af3cbb8e0a633bcecef97b2fb8f16044bf408da230226e37d55e42bbf084c7cafd770809276f38d1f9d1b2c8453308cb3922a572386fb5a95b8242f4d80596345e9e1ba3e65d71b2fd7c8bf412f44c3ea567a48a06e569f9e26be7657e0cdae213ec090f2a6b524644103e669b3fc8e63db7683d323f08988049849a6c7d96e1cce737912cc644bfd6f4445e1801ea87ac48b81c6632188acd434bdff25fe3385c1d2d48558b04c6ab69854bd5ed630a8f977289c60382361e12849c77ac2adb9653977cdcedcdeca00e7f5212ba7bdab7217af28d94c49e7c426fa2f014f39f7bb216e8a90f72f89a10d156718f8696031e9da649ca207b52a25b0dfda46c811d55006a559a6";
 
 let dataToken = {
   access_token: "",
@@ -25,24 +36,11 @@ const getToken = async () => {
     console.log("refresh");
     if (Date.now() >= dataToken.expires_in * 1000) {
       try {
-        const { data } = await axios.post(
-          "http://localhost:3000/api/refreshToken",
-          {
-            ...userData,
-            refresh_token: dataToken.refresh_token,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
-              "Access-Control-Allow-Headers":
-                "Accept, X-Requested-With, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization",
-            },
-          }
-        );
+        const { data } = await instance.post("api/refreshToken", {
+          ...userData,
+          refresh_token: dataToken.refresh_token,
+        });
         result = data;
-
         const { access_token, refresh_token, expires_in, token_type } = data;
         dataToken = {
           ...dataToken,
@@ -56,26 +54,12 @@ const getToken = async () => {
       }
     }
   } else {
-    console.log("get new ");
     try {
-      const { data } = await axios.post(
-        "http://localhost:3000/api/getToken",
-        {
-          ...userData,
-          code: CODE_AUTH,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
-            "Access-Control-Allow-Headers":
-              "Accept, X-Requested-With, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization",
-          },
-        }
-      );
+      const { data } = await instance.post("api/getToken", {
+        ...userData,
+        code: CODE_AUTH,
+      });
       result = data;
-
       const { access_token, refresh_token, expires_in, token_type } = data;
       dataToken = {
         ...dataToken,
@@ -90,6 +74,22 @@ const getToken = async () => {
   }
   return result;
 };
+
+const getDeals = async (limit, page) => {
+  try {
+    const { data } = await instance.post("api/getDeal", {
+      params: {
+        limit,
+        page,
+      },
+      token: dataToken.access_token,
+    });
+    return data;
+  } catch (err) {
+    console.log("no get data deal", err);
+  }
+};
+
 const getDataDeal = async (dataParams) => {
   isZeroDealsLeft = false;
   if (dataParams.limit > 5) {
@@ -100,25 +100,7 @@ const getDataDeal = async (dataParams) => {
     const endPageIndex = dataParams.page * amoCrmPages;
     for (let i = startPageIndex; i <= endPageIndex; i++) {
       try {
-        const { data } = await axios.post(
-          "http://localhost:3000/api/getDeal",
-          {
-            params: {
-              limit: 5,
-              page: i,
-            },
-            token: dataToken.access_token,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
-              "Access-Control-Allow-Headers":
-                "Accept, X-Requested-With, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization",
-            },
-          }
-        );
+        const data = await getDeals(5, i);
         if (data !== "" && data._embedded.leads.length > 0) {
           const deals = data._embedded.leads;
           const currentArray = deals.map((deal) => ({
@@ -144,25 +126,7 @@ const getDataDeal = async (dataParams) => {
     do {
       page++;
       try {
-        const { data } = await axios.post(
-          "http://localhost:3000/api/getDeal",
-          {
-            params: {
-              limit: 5,
-              page: page,
-            },
-            token: dataToken.access_token,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
-              "Access-Control-Allow-Headers":
-                "Accept, X-Requested-With, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization",
-            },
-          }
-        );
+        const data = await getDeals(5, page);
         response = data !== "" ? [...data._embedded.leads] : [];
         if (data !== "" && data._embedded.leads.length > 0) {
           const deals = data._embedded.leads;
@@ -185,26 +149,7 @@ const getDataDeal = async (dataParams) => {
   }
   if (dataParams.limit <= 5) {
     try {
-      const { data } = await axios.post(
-        "http://localhost:3000/api/getDeal",
-        {
-          params: {
-            limit: dataParams.limit,
-            page: dataParams.page,
-          },
-          token: dataToken.access_token,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
-            "Access-Control-Allow-Headers":
-              "Accept, X-Requested-With, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization",
-          },
-        }
-      );
-      console.log("data in <5", data);
+      const data = await getDeals(dataParams.limit, dataParams.page);
       if (data !== "" && data._embedded.leads.length > 0) {
         const deals = data._embedded.leads;
         const currentArray = deals.map((deal) => ({
@@ -231,139 +176,112 @@ const parseDate = (data) => {
 };
 
 const getDataUser = async (dataParams) => {
-  const { data } = await axios.post(
-    "http://localhost:3000/api/getDeal",
-    {
-      params: {
-        user_id: dataParams.user_id,
-      },
-      token: dataToken.access_token,
+  const { data } = await instance.post("api/getDeal", {
+    params: {
+      user_id: dataParams.user_id,
     },
-    {
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers":
-          "Accept, X-Requested-With, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization",
-      },
-    }
-  );
+    token: dataToken.access_token,
+  });
   return data;
 };
-
-const stateSort = document.getElementById("select-sort");
 
 const itemPerPage = document.getElementById("itemperpage");
 
 itemPerPage.addEventListener("change", async () => {
-  stateSort.value = "none";
-  // if (itemPerPage.value === "all") {
-  // let data;
-  // const replay = setInterval(async () => {
-  //   try {
-  //     data = await getDataDeal({
-  //       limit: 5,
-  //       page: pageNumber,
-  //     });
-  //     const tbody = document.getElementById("tableDataDeal");
-  //     console.log("in timer", data);
-  //     if (data !== "") {
-  //       data._embedded.leads.forEach((deal) => {
-  //         const row = document.createElement("tr");
-  //         for (const key in deal) {
-  //           const cell = document.createElement("td");
-  //           cell.textContent = deal[key];
-  //           row.appendChild(cell);
-  //         }
-  //         tbody.appendChild(row);
-  //       });
-  //       pageNumber++;
-  //     } else {
-  //       pageNumber--;
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }, 500);
-  // console.log("pupu", data);
-  // if (data === "") {
-  //   console.log("clearInterval");
-  //   clearInterval(replay);
-  // }
-  // } else {
+  name.innerHTML = `Имя сделки`;
+  price.innerHTML = `Бюджет`;
+  stateSort.name = "";
+  stateSort.order = "desc";
   stateDataDeal = [];
   pageNumber = 1;
   isDataLoading = false;
+  drawLoauder();
   await getDataDeal({ limit: itemPerPage.value, page: pageNumber });
   updateTable();
   isDataLoading = true;
-  // }
+  drawLoauder();
 });
 
 const btnPrev = document.getElementById("prev");
 const btnNext = document.getElementById("next");
 
 btnPrev.addEventListener("click", async () => {
-  stateDataDeal = [];
-  console.log("pageNumber", pageNumber);
-  if (pageNumber > 1) {
-    pageNumber--;
+  if (itemPerPage.value !== "all") {
+    stateDataDeal = [];
+    if (pageNumber > 1) {
+      pageNumber--;
+    }
+    isDataLoading = false;
+    drawLoauder();
+    await getDataDeal({ limit: itemPerPage.value, page: pageNumber });
+    updateTable();
+    isDataLoading = true;
+    drawLoauder();
   }
-  isDataLoading = false;
-  await getDataDeal({ limit: itemPerPage.value, page: pageNumber });
-  updateTable();
-  isDataLoading = true;
 });
 
 btnNext.addEventListener("click", async () => {
-  console.log("stateDataDeal.length", stateDataDeal.length);
-  console.log("itemPerPage.value", itemPerPage.value);
-  console.log("isZeroDealsLeft", isZeroDealsLeft);
-  if (stateDataDeal.length < itemPerPage.value) return;
-  stateDataDeal = [];
-  pageNumber++;
-  console.log("pageNumbernex", pageNumber);
-  // if (pageNumber < maxPage) pageNumber++;
-  isDataLoading = false;
-  await getDataDeal({
-    limit: itemPerPage.value,
-    page: pageNumber,
-  });
-  if (isZeroDealsLeft) {
-    pageNumber--;
+  if (itemPerPage.value !== "all") {
+    if (stateDataDeal.length < itemPerPage.value) return;
+    stateDataDeal = [];
+    pageNumber++;
+    isDataLoading = false;
+    drawLoauder();
     await getDataDeal({
       limit: itemPerPage.value,
       page: pageNumber,
     });
+    if (isZeroDealsLeft) {
+      pageNumber--;
+      await getDataDeal({
+        limit: itemPerPage.value,
+        page: pageNumber,
+      });
+    }
+    updateTable();
+    isDataLoading = true;
+    drawLoauder();
   }
-  updateTable();
-  isDataLoading = true;
 });
 
-function updateTable() {
-  switch (stateSort.value) {
-    case "name":
-      stateDataDeal.sort((a, b) => {
-        if (a.name < b.name) {
-          return -1;
-        } else if (a.name > b.name) {
-          return 1;
-        }
-        return 0;
-      });
-      break;
-    case "price":
-      stateDataDeal.sort((a, b) => {
-        if (a.price < b.price) {
-          return -1;
-        } else if (a.price > b.price) {
-          return 1;
-        }
-        return 0;
-      });
-      break;
+const name = document.getElementById("name");
+const price = document.getElementById("price");
+
+price.addEventListener("click", () => {
+  console.log("clik");
+  stateSort.name = "price";
+  stateSort.order = stateSort.order === "desc" ? "asc" : "desc";
+  name.innerHTML = `Имя сделки`;
+  price.innerHTML = `Бюджет ${
+    stateSort.order === "desc" ? "&uarr;" : "&darr;"
+  }`;
+  updateTable();
+});
+name.addEventListener("click", () => {
+  console.log("clik");
+  stateSort.name = "name";
+  stateSort.order = stateSort.order === "desc" ? "asc" : "desc";
+  price.innerHTML = `Бюджет`;
+  name.innerHTML = `Имя сделки ${
+    stateSort.order === "desc" ? "&uarr;" : "&darr;"
+  }`;
+  updateTable();
+});
+
+const updateTable = () => {
+  console.log("update", stateSort);
+  if (stateSort.name !== "") {
+    console.log("if", stateSort);
+    stateDataDeal.sort((a, b) => {
+      if (a[stateSort.name] < b[stateSort.name]) {
+        return stateSort.order === "desc" ? 1 : -1;
+      } else if (a[stateSort.name] > b[stateSort.name]) {
+        return stateSort.order === "desc" ? -1 : 1;
+      }
+      return 0;
+    });
   }
+
   const tbody = document.getElementById("tableDataDeal");
   tbody.innerHTML = "";
   console.log("---------------->stateDataDeal", stateDataDeal);
@@ -376,16 +294,30 @@ function updateTable() {
     }
     tbody.appendChild(row);
   });
-}
+};
+const drawLoauder = () => {
+  const loader = document.getElementById("loader");
+  console.log(isDataLoading);
+  if (!isDataLoading) {
+    console.log("draw");
+    console.log(loader);
+    loader.innerHTML =
+      '<img src="../src/loading.gif" height="100%"  width="100%"/>';
+  } else {
+    loader.innerHTML = "";
+  }
+};
 
 const main = async () => {
   await getToken();
   console.log("access_token", dataToken.access_token);
   console.log("refresh_token", dataToken.refresh_token);
   isDataLoading = false;
+  drawLoauder();
   await getDataDeal({ limit: itemPerPage.value, page: pageNumber });
   updateTable();
   isDataLoading = true;
+  drawLoauder();
 };
 
 main();
