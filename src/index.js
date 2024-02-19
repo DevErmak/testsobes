@@ -9,7 +9,7 @@ const instance = axios.create({
   },
 });
 const CODE_AUTH =
-  "def502002252f4710ca2e4db4e1939ab3c23ac3bc1dc95746669e82393d66b23549ed1f6ec347a9c5898b863ffabb6b39929e3e3895ab49abbb3d94ca87cbcbda9bc7a3b64171f0d77faa034858c7387ee1b57850c74d3c38bcaebc0a86dde8027df1d36b41d34ed068b40d04618e8126a231365ab48a0292971092be68d613a470e041d6fbe8d349e16768b70236e866c421f3f44f4a0937ffd6f0ffd2c32d2e1536f298d06e7eb4a45a421470ad3f10536556549f527cf840c63ed47c4c1b6e9f91a77bf1c4cab8226f2cc218b79c70b744d2611296994eac77685f6191404d50a4408f81007cef9690d273ae36fbe67637e6dd2d7b03b4737bfd6096588fbe65b01e6fb04c186463fb3e4b5512c0e7550dcfb2ebad34e7f211e282003cb724df58b9c5b576c731c7969bf68c0798ae45f0e134029514918f51d0dfb43e967970add2825d02995cb5371dd792e8f29dc3afca8d0eb1240e88558690bb3f0e67c69c9238e7a19c78045952da81da1677d97132f55c7f4ff88a183936e6ebc8f55355021f5bd0a903306751f9cf3a46d95c112d562e2a6ef9ec5dc492c5f4b1c43b0a4f64e58d274369b84db5191cc91d2b78b742783b17021cac3aaf03035bc3dd1323957385dd7fe4d733584eae1ffbb2227240ea66d801c6a1acecbe7f0ac6f378f5a8baa81d310c9c3b7ce4eb893dd";
+  "def502008b51f04ee80e4d393d35404d1b7e317dd04600ecaabb513d168ac5e09b72b85380ebbeab6e15d270314bb82ec054cc4ca9fc4ec36d98bf1355575ce35312bc5e6657f26f6f1de7dcdb115c3881f9307c62c67482722b7d26f121af84a4e5034f6c3250331be845296e152c967edc2756d8e756b92d841ba24af7ff30c6da7b5cb2a7bf1ce4a17be1c22144df3d44d7b8776e00d82489209b9e9dc89afe6545a175acef2477c57a573d616f6b95b1386a37161551b74a01cb49b10c13a32d0bd428fdaa826c6b7630ea9380499e84a5ff01de245a7f8973e39b6525510a9600dbc6b7bcb32847de6989a754f801548cd238685d7de2cf206cb86de5569c78531ebf7c14cfe4d3f98d3c877abb7d2de538357c6aff3f3b8a824bd6d862d7f12b0cf88a40230269f46ba470715b71b64d23ec0f0a02e86e55c393dd760f55e94c26caf43af72c7fb9eb54c64f6cfd5c8fd81a7d88f15d3447b70e74b67177a0b5e03a52287f836f92c6109338dc662f29e9ed0d2bb69ed6d6e8bd4d3ff40822311b3d40238aaed49c9c2c9eac8d6fdf8bd9c48e0f72bf07311c1ddf561a896a216a9891ddd223677dacab810977cf4728d7c61f8722e77d46a1e87a6043d42c1e2b431184d57027568f4875ee50e04506c0f5355ede78b530aeef8ca2e555f4f12c3cd6a25f201a0f7418120c3c22";
 
 let pageNumber = 1;
 let stateDataDeal = [];
@@ -195,11 +195,11 @@ itemPerPage.addEventListener("change", async () => {
   stateDataDeal = [];
   pageNumber = 1;
   isDataLoading = false;
-  drawLoauder();
+  drawLoader();
   await getDataDeal({ limit: itemPerPage.value, page: pageNumber });
   updateTable();
   isDataLoading = true;
-  drawLoauder();
+  drawLoader();
 });
 
 const btnPrev = document.getElementById("prev");
@@ -210,13 +210,18 @@ btnPrev.addEventListener("click", async () => {
     stateDataDeal = [];
     if (pageNumber > 1) {
       pageNumber--;
+      isDataLoading = false;
+      drawLoader();
+      await getDataDeal({ limit: itemPerPage.value, page: pageNumber });
+      updateTable();
+      isDataLoading = true;
+      drawLoader();
+    } else {
+      isDataLoading = false;
+      await getDataDeal({ limit: itemPerPage.value, page: pageNumber });
+      updateTable();
+      isDataLoading = true;
     }
-    isDataLoading = false;
-    drawLoauder();
-    await getDataDeal({ limit: itemPerPage.value, page: pageNumber });
-    updateTable();
-    isDataLoading = true;
-    drawLoauder();
   }
 });
 
@@ -226,7 +231,7 @@ btnNext.addEventListener("click", async () => {
     stateDataDeal = [];
     pageNumber++;
     isDataLoading = false;
-    drawLoauder();
+    drawLoader();
     await getDataDeal({
       limit: itemPerPage.value,
       page: pageNumber,
@@ -240,7 +245,7 @@ btnNext.addEventListener("click", async () => {
     }
     updateTable();
     isDataLoading = true;
-    drawLoauder();
+    drawLoader();
   }
 });
 
@@ -295,7 +300,7 @@ const updateTable = () => {
     tbody.appendChild(row);
   });
 };
-const drawLoauder = () => {
+const drawLoader = () => {
   const loader = document.getElementById("loader");
   console.log(isDataLoading);
   if (!isDataLoading) {
@@ -313,11 +318,11 @@ const main = async () => {
   console.log("access_token", dataToken.access_token);
   console.log("refresh_token", dataToken.refresh_token);
   isDataLoading = false;
-  drawLoauder();
+  drawLoader();
   await getDataDeal({ limit: itemPerPage.value, page: pageNumber });
   updateTable();
   isDataLoading = true;
-  drawLoauder();
+  drawLoader();
 };
 
 main();
