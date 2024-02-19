@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -16,41 +16,41 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root">
-      <main>
-        <section class="header">
-          <div class="items-controller">
-            <span>Количество записей</span>
-            <select id="itemperpage">
-              <option value="2">02</option>
-              <option value="5">05</option>
-              <option value="10" selected>10</option>
-              <option value="all">all</option>
-            </select>
-          </div>
-        </section>
-        <section class="field">
-          <table>
-            <thead>
-              <tr>
-                <th id="name" class="name-header">Имя сделки</th>
-                <th id="price" class="name-header">Бюджет</th>
-                <th>Дата создания</th>
-                <th>Дата изменения</th>
-                <th>Ответственный</th>
-              </tr>
-            </thead>
-            <tbody id="tableDataDeal"></tbody>
-          </table>
-          <div id="loader"></div>
-          <div class="bottom-field">
-            <ul class="pagination">
-              <li class="prev"><a href="#" id="prev">&#139;</a></li>
-              <li class="next"><a href="#" id="next">&#155;</a></li>
-            </ul>
-          </div>
-        </section>
-      </main>
+    <div>
+      <section class="header">
+        <div class="items-controller">
+          <span>Количество записей</span>
+          <select id="itemperpage">
+            <option value="2">02</option>
+            <option value="5">05</option>
+            <option value="10" selected>10</option>
+            <option value="all">all</option>
+          </select>
+        </div>
+      </section>
+      <section class="field">
+        <table>
+          <thead>
+            <tr>
+              <th id="name" class="name-header">Имя сделки</th>
+              <th id="price" class="name-header">Бюджет</th>
+              <th>Дата создания</th>
+              <th>Дата изменения</th>
+              <th>Ответственный</th>
+            </tr>
+          </thead>
+          <tbody id="tableDataDeal"></tbody>
+        </table>
+        <div class="bottom-field">
+          <ul class="pagination">
+            <li><button id="prev" disabled>&#139;</button></li>
+            <li><button id="next">&#155;</button></li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <div id="loader-container" class="loader-container">
+      <span class="loader"></span>
     </div>
     <script src="../src/index.js"></script>
   </body>

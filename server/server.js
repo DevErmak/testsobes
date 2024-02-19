@@ -24,6 +24,7 @@ app.post("/api/getToken", async (req, res) => {
         redirect_uri: "http://localhost:3000/server.js",
       }
     );
+    console.log("---------------->data", data);
     res.json(data);
   } catch (err) {
     console.log("---------------->error", err);

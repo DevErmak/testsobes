@@ -6,11 +6,9 @@ body {
   margin: 50px;
 }
 main {
-  widows: 70%;
   height: auto;
   padding: 20px;
   margin: 50px auto;
-  background: whitesmoke;
   font-family: system-ui;
   color: #666;
 }
@@ -19,11 +17,10 @@ main {
   height: 100px;
   margin: auto;
   display: flex;
-  justify-content: space-between;
+  justify-content: start;
   align-items: center;
 }
-.items-controller,
-.search {
+.items-controller {
   flex-shrink: 0;
   display: flex;
   align-content: center;
@@ -36,13 +33,6 @@ select {
   cursor: pointer;
   border: none;
   background: transparent;
-}
-.search > input {
-  padding: 8px;
-  border: none;
-  outline: navajowhite;
-  margin: 0 0 0 20px;
-  background: white;
 }
 .field {
   width: 90%;
@@ -80,30 +70,63 @@ td {
   margin: 10px;
   flex-shrink: 0;
   text-align: center;
-  border-radius: 5px;
-  border: 1px solid #999;
   color: #999;
 }
-.pagination li.active {
-  background: #32d6aa;
-  color: white;
-  border-color: #32d6aa;
-}
-.pagination li a {
+.pagination li button {
   text-decoration: none;
   padding: 3px 8px;
   color: inherit;
   display: block;
   font-family: sans-serif;
   font-size: 13px;
-}
-i.fa-edit {
-  color: lime;
-}
-i.fa-trash {
-  color: red;
+  cursor: pointer;
 }
 
 .name-header {
   cursor: pointer;
+}
+
+.loader-container {
+  position: absolute;
+  pointer-events: none;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(5px);
+}
+
+.active-loader {
+  display: block;
+}
+
+.none-active-loader {
+  display: none;
+}
+
+.loader-container > span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #c42525;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
